@@ -1,0 +1,76 @@
+<p-table [value]="bookings" styleClass="p-datatable-gridlines" [paginator]="true" [(rows)]="rows"
+    [showCurrentPageReport]="true" responsiveLayout="scroll"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+    <ng-template pTemplate="caption">
+        RESERVAS
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th class="p-text-center">ID</th>
+            <th class="p-text-center">Salida</th>
+            <th class="p-text-center">Destino</th>
+            <th class="p-text-center">Fecha</th>
+            <th class="p-text-center">Asiento</th>
+            <th class="p-text-center">Costo</th>
+            <th class="p-text-center">Actualizar</th>
+            <th class="p-text-center">Eliminar</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-booking>
+        <tr>
+            <td>{{booking.bookingid}}</td>
+            <td>{{booking.flightsource}}</td>
+            <td>{{booking.flightdest}}</td>
+            <td>{{booking.bookdate}}</td>
+            <td>{{booking.seatnumber}}</td>
+            <td>{{booking.seatcost}}</td>
+            <td>
+                <p-button icon="pi pi-eye" [loading]="loading_reserva" (click)="actualizar(booking)"></p-button>
+            </td>
+            <td>
+                <p-button styleClass="p-button-danger" icon="pi pi-trash" (click)="eliminiar(booking)"></p-button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+        <tr class="p-text-center">
+            <td class="p-text-center" [attr.colspan]="8">
+                No hay reservas disponibles
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+
+<p-dialog header="Actualizar Reserva" [(visible)]="mod_vuelo" [modal]="true" [style]="{width:'70vw'}" [draggable]="false"
+    [resizable]="false" (onHide)="onCloseModal()">
+
+    <form class="p-fluid p-formgrid p-grid p-mb-0" [formGroup]="formVuelo">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Partida:</label>
+            <input pInputText formControlName="flightsource" />
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Destino:</label>
+            <input pInputText formControlName="flightdest" />
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="clase_predio">Asientos disponibles:</label>
+            <p-dropdown appendTo="body" formControlName="seatid" [options]="asientos" optionLabel="seatnumber" optionValue="seatid"
+                placeholder="SELECCIONE UN ASIENTO" [showClear]="true" (onChange)="changeAsiento()"></p-dropdown>
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Costo:</label>
+            <input pInputText formControlName="seatcost" />
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton class="p-button-secondary" (click)="(mod_vuelo = !mod_vuelo)" label="Cancelar"></button>
+        <button pButton icon="pi pi-save" (click)="updateReserva()" label="Actualizar" class="btn-success"></button>
+    </ng-template>
+</p-dialog>

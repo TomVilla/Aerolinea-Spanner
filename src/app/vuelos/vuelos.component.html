@@ -1,0 +1,104 @@
+<div class="p-mt-3">
+    <p-table [value]="flights" styleClass="p-datatable-gridlines" [paginator]="true" [(rows)]="rows"
+        [loading]="loading"
+        [showCurrentPageReport]="true" responsiveLayout="scroll"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="caption">
+            VUELOS 
+            <div>
+                <p-button [loading]="loading_creacion" label="Crear" (click)="(mod_flight = true)"></p-button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="p-text-center">ID</th>
+                <th class="p-text-center">Salida</th>
+                <th class="p-text-center">Destino</th>
+                <th class="p-text-center">Fecha</th>
+                <th class="p-text-center">Reservar</th>
+                <th class="p-text-center">Eliminar</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-flight>
+            <tr>
+                <td>{{flight.flightid}}</td>
+                <td>{{flight.flightsource}}</td>
+                <td>{{flight.flightdest}}</td>
+                <td>{{flight.flightdate}}</td>
+                <td>
+                    <p-button icon="pi pi-eye" (click)="reservar(flight)"></p-button>
+                </td>
+                <td>
+                    <p-button [loading]="loading_delete" styleClass="p-button-danger" icon="pi pi-trash" (click)="eliminar(flight)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr class="p-text-center">
+                <td class="p-text-center" [attr.colspan]="5">
+                    No hay vuelos disponibles
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Reservar Vuelo" [(visible)]="mod_vuelo" [modal]="true" [style]="{width:'70vw'}" [draggable]="false"
+    [resizable]="false" (onHide)="onCloseModal()">
+
+    <form class="p-fluid p-formgrid p-grid p-mb-0" [formGroup]="formVuelo">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Partida:</label>
+            <input pInputText formControlName="flightsource" />
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Destino:</label>
+            <input pInputText formControlName="flightdest" />
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="clase_predio">Asientos disponibles:</label>
+            <p-dropdown appendTo="body" formControlName="asiento" [options]="asientos" optionLabel="seatnumber" optionValue="seatid"
+                placeholder="SELECCIONE UN ASIENTO" [showClear]="true" (onChange)="changeAsiento()"></p-dropdown>
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Costo:</label>
+            <input pInputText formControlName="costo" />
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton class="p-button-secondary" (click)="(mod_vuelo = !mod_vuelo)" label="Cancelar"></button>
+        <button pButton icon="pi pi-save" (click)="saveReserva()" label="Reservar" class="btn-success"></button>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog header="Crear Vuelo" [(visible)]="mod_flight" [modal]="true" [style]="{width:'70vw'}" [draggable]="false"
+    [resizable]="false" (onHide)="onCloseModal()">
+
+    <form class="p-fluid p-formgrid p-grid p-mb-0" [formGroup]="formVuelo">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Partida:</label>
+            <input pInputText formControlName="flightsource" />
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Destino:</label>
+            <input pInputText formControlName="flightdest" />
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label for="tipo_mejora">Fecha:</label>
+            <input pInputText formControlName="flightdate" type="date" />
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton class="p-button-secondary" (click)="(mod_flight = !mod_flight)" label="Cancelar"></button>
+        <button pButton icon="pi pi-save" (click)="saveVuelo()" label="Crear" class="btn-success"></button>
+    </ng-template>
+</p-dialog>
